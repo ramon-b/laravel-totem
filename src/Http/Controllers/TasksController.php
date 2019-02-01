@@ -2,10 +2,10 @@
 
 namespace Studio\Totem\Http\Controllers;
 
-use Studio\Totem\Task;
-use Studio\Totem\Totem;
 use Studio\Totem\Contracts\TaskInterface;
 use Studio\Totem\Http\Requests\TaskRequest;
+use Studio\Totem\Task;
+use Studio\Totem\Totem;
 
 class TasksController extends Controller
 {
@@ -38,9 +38,9 @@ class TasksController extends Controller
                 ->builder()
                 ->sortableBy([
                     'description',
-                ], ['description'=>'asc'])
+                ], ['description' => 'asc'])
                 ->when(request('q'), function ($query) {
-                    $query->where('description', 'LIKE', '%'.request('q').'%');
+                    $query->where('description', 'LIKE', '%' . request('q') . '%');
                 })
                 ->paginate(20),
         ]);
@@ -54,10 +54,10 @@ class TasksController extends Controller
     public function create()
     {
         return view('totem::tasks.form', [
-            'task'          => new Task,
-            'commands'      => Totem::getCommands(),
-            'timezones'     => timezone_identifiers_list(),
-            'frequencies'   => Totem::frequencies(),
+            'task' => new Task,
+            'commands' => Totem::getCommands(),
+            'timezones' => timezone_identifiers_list(),
+            'frequencies' => Totem::frequencies(),
         ]);
     }
 
@@ -84,8 +84,10 @@ class TasksController extends Controller
      */
     public function view(Task $task)
     {
+        $task = $this->tasks->builder()->orderBy('description')->find($task);
+
         return view('totem::tasks.view', [
-            'task'  => $task,
+            'task' => $task,
         ]);
     }
 
@@ -98,10 +100,10 @@ class TasksController extends Controller
     public function edit(Task $task)
     {
         return view('totem::tasks.form', [
-            'task'          => $task,
-            'commands'      => Totem::getCommands(),
-            'timezones'     => timezone_identifiers_list(),
-            'frequencies'   => Totem::frequencies(),
+            'task' => $task,
+            'commands' => Totem::getCommands(),
+            'timezones' => timezone_identifiers_list(),
+            'frequencies' => Totem::frequencies(),
         ]);
     }
 
