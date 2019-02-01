@@ -2,11 +2,11 @@
 
 namespace Studio\Totem\Http\Controllers;
 
+use Studio\Totem\Contracts\TaskInterface;
+use Studio\Totem\Frequency;
+use Studio\Totem\Http\Requests\TaskRequest;
 use Studio\Totem\Task;
 use Studio\Totem\Totem;
-use Studio\Totem\Frequency;
-use Studio\Totem\Contracts\TaskInterface;
-use Studio\Totem\Http\Requests\TaskRequest;
 
 class TasksController extends Controller
 {
@@ -47,10 +47,10 @@ class TasksController extends Controller
     public function create()
     {
         return view('totem::tasks.form', [
-            'task'          => new Task,
-            'commands'      => Totem::getCommands(),
-            'timezones'     => timezone_identifiers_list(),
-            'frequencies'   => Totem::frequencies(),
+            'task' => new Task,
+            'commands' => Totem::getCommands(),
+            'timezones' => timezone_identifiers_list(),
+            'frequencies' => Totem::frequencies(),
         ]);
     }
 
@@ -77,8 +77,10 @@ class TasksController extends Controller
      */
     public function view($task)
     {
+        $task = $this->tasks->builder()->orderBy('description')->find($task);
+
         return view('totem::tasks.view', [
-            'task'  => $task,
+            'task' => $task,
         ]);
     }
 
@@ -91,10 +93,10 @@ class TasksController extends Controller
     public function edit($task)
     {
         return view('totem::tasks.form', [
-            'task'          => $task,
-            'commands'      => Totem::getCommands(),
-            'timezones'     => timezone_identifiers_list(),
-            'frequencies'   => Totem::frequencies(),
+            'task' => $task,
+            'commands' => Totem::getCommands(),
+            'timezones' => timezone_identifiers_list(),
+            'frequencies' => Totem::frequencies(),
         ]);
     }
 
@@ -173,7 +175,7 @@ class TasksController extends Controller
                             'auto_cleanup_type' => $record->auto_cleanup_type,
                         ]);
 
-                        if (! empty($record->frequencies)) {
+                        if (!empty($record->frequencies)) {
                             foreach ($record->frequencies as $freq) {
                                 Frequency::updateOrCreate([
                                     'id' => $freq->id,
