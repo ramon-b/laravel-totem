@@ -92,6 +92,8 @@ class TasksController extends Controller
      */
     public function edit($task)
     {
+        $task = $this->tasks->builder()->orderBy('description')->find($task);
+
         return view('totem::tasks.form', [
             'task' => $task,
             'commands' => Totem::getCommands(),
